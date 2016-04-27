@@ -44,6 +44,7 @@ class TransitionStateClustering:
 		self._transition_states_scluster = []
 		self._demonstration_sizes = []
 		self._distinct_state_clusters = 0
+		#self.clipt = clipt
 
 	"""
 	This function adds a demonstration to the model
@@ -101,25 +102,26 @@ class TransitionStateClustering:
 		self.model = []
 		self.task_segmentation = []
 		self.segmentation = []
+		self.pruning = pruning
 
 		#helper routines
 		self.identifyTransitions(totalSize,normalize,normalizeKern)
 		self.clusterInState()
-		self.pruneClusters(pruning)
+		self.pruneClusters()
 		self.clusterInTime()
 		self.taskToTrajectory()
 
 	"""
 	This prunes transitions to a specified threshold
 	"""
-	def pruneClusters(self,pruning):
+	def pruneClusters(self):
 		distinct_clusters = set([c[2] for c in self._transition_states_scluster])
 		N = len(self._demonstration_sizes)
 		new_transitions = []
 		for c in distinct_clusters:
 			tD = set([d[0] for d in self._transition_states_scluster if d[2] == c])
 			tS = [d for d in self._transition_states_scluster if d[2] == c]
-			if (len(tD) +0.0)/N > pruning:
+			if (len(tD) +0.0)/N > self.pruning:
 				new_transitions.extend(tS)
 
 		if self.verbose:
@@ -224,7 +226,7 @@ class TransitionStateClustering:
 	"""
 	Uses Teodor's code to do DP GMM clustering
 	"""
-	def DPGMM(self,data, dimensionality):
+	def DPGMM(self,data, dimensionality, p=0.9):
 		vdp = VDP(GaussianNIW(dimensionality))
 		vdp.batch_learn(vdp.distr.sufficient_stats(data))		
 		likelihoods = vdp.pseudo_resp(np.ascontiguousarray(data))[0]
@@ -236,7 +238,7 @@ class TransitionStateClustering:
 		for i in range(1,len(vdp.cluster_sizes())):
 			running_total = running_total + cluster_s[i]
 			real_clusters = i + 1
-			if running_total/total > 0.90:
+			if running_total/total > p:
 				break
 
 		return [np.argmax(l[0:real_clusters]) for l in likelihoods]
@@ -302,11 +304,17 @@ class TransitionStateClustering:
 			mm.fit(ts_data_array)
 
 			#subcluster in time
-			indices = self.DPGMM(t_data_array,1)
+			indices = self.DPGMM(t_data_array,1,0.75)
 			indicesDict = list(set(indices))
 
 			#finish off by storing two values the task segmentation	
 			for j in range(0, len(tsI)):
+				dd = set([tsI[n][0] for (n, ind) in enumerate(indices) if ind == indices[j]])
+				
+				#time pruning condition
+				if (len(dd) + 0.0)/len(self._demonstration_sizes) < self.pruning:
+					continue
+
 				self.task_segmentation.append((tsI[j][0],
 										  	   tsI[j][1],
 										       tsI[j][2],

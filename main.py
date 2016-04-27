@@ -3,14 +3,26 @@ np.seterr(divide='ignore') # these warnings are usually harmless for this code
 from matplotlib import pyplot as plt
 import copy, os
 from generate.TrajectoryDataGenerator import *
+from tsc.tsc import TransitionStateClustering
 
 
 #creates a system whose regimes are uniformly sampled from the stochastic params
-sys = createNewDemonstrationSystem(dims=2, observation=[0,0], resonance=[0,0], drift=[0,0])
+sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.1], resonance=[0.0,1], drift=[0,0.0])
 
 #lm is the mean number of loops, dp is the probability of "missing"
-t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
-plotData(t)
+#t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+#u = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+#v = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+#w = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+#x = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+
+a = TransitionStateClustering(window_size=2)
+for i in range(0,20):
+	t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+	a.addDemonstration(np.squeeze(t))
+
+a.fit(normalize=False, pruning=0.9)
+print a.segmentation
 
 """
 SAVE_FIGURES = False

@@ -36,7 +36,7 @@ def bernstein_poly(i, n, t):
     return comb(n, i) * ( t**(n-i) ) * (1 - t)**i
 
 
-def bezier_curve(data, nTimes=100):
+def bezier_curve(data, nTimes=50):
     points = [(i[0,0],i[1,0]) for i in data]
     nPoints = len(points)
     xPoints = np.array([p[0] for p in points])
