@@ -2,12 +2,13 @@ import numpy as np
 np.seterr(divide='ignore') # these warnings are usually harmless for this code
 from matplotlib import pyplot as plt
 import copy, os
+from generate.TrajectoryDataGenerator import *
 
 
 #creates a system whose regimes are uniformly sampled from the stochastic params
 sys = createNewDemonstrationSystem(dims=2, observation=[0,0], resonance=[0,0], drift=[0,0])
 
-#lm is the mean number of loops, dp is the probability of "missing" a regime
+#lm is the mean number of loops, dp is the probability of "missing"
 t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 plotData(t)
 
