@@ -294,7 +294,7 @@ class TransitionStateClustering:
 			for j in range(0, len(tsI)):
 				ts = tsI[j]
 				ts_data_array[j,:] = self._demonstrations[ts[0]][ts[1],:]
-				t_data_array[j,:] = ts[1]
+				t_data_array[j,:] = ts[1] + np.random.randn(1,1) #do this to avoid conditioning problems
 
 			if len(tsI) == 0:
 				continue

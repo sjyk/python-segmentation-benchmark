@@ -7,7 +7,7 @@ from tsc.tsc import TransitionStateClustering
 
 
 #creates a system whose regimes are uniformly sampled from the stochastic params
-sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.1], resonance=[0.0,1], drift=[0,0.0])
+sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.1], resonance=[0.0,0], drift=[0,0.0])
 
 #lm is the mean number of loops, dp is the probability of "missing"
 #t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
@@ -21,7 +21,7 @@ for i in range(0,20):
 	t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 	a.addDemonstration(np.squeeze(t))
 
-a.fit(normalize=False, pruning=0.9)
+a.fit(normalize=False, pruning=0.8)
 print a.segmentation
 
 """

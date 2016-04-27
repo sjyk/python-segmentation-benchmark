@@ -20,6 +20,7 @@ def createNewDemonstrationSystem(k=5,
 								 observation=[0,0]):
 
 	targets = generateTargetStates(k, dims, bounds)
+	print targets
 	system =  generateSystemSpecs(k,drift,resonance,observation) 
 	
 	return {'targets': targets,
