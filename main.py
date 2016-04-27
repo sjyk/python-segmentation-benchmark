@@ -3,16 +3,12 @@ np.seterr(divide='ignore') # these warnings are usually harmless for this code
 from matplotlib import pyplot as plt
 import copy, os
 
-#import pyhsmm
-#from pyhsmm.util.text import progprint_xrange
-#from generate.TrajectoryDataGenerator import *
 
-#print generateRandomSequence(k=5, lm=1, dp=0.1)
-#print generateTargetStates(k=5, dims=3)
-#print  generateStableSystems(k=5, dims=3)
+#creates a system whose regimes are uniformly sampled from the stochastic params
+sys = createNewDemonstrationSystem(dims=2, observation=[0,0], resonance=[0,0], drift=[0,0])
 
-sys = createNewDemonstrationSystem(dims=2, observation=[0,0])
-t = sampleDemonstrationFromSystem(sys,np.ones((2,1)))
+#lm is the mean number of loops, dp is the probability of "missing" a regime
+t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 plotData(t)
 
 """
