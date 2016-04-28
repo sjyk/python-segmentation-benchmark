@@ -18,8 +18,8 @@ sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.05], resonance
 #x = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 
 
-a = TransitionStateClustering(window_size=2, normalize=False, pruning=0.8,delta=0.5)
-#a = TimeVaryingGaussianMixtureModel(hard_param=3)
+#a = TransitionStateClustering(window_size=2, normalize=False, pruning=0.8,delta=0.5)
+a = TimeVaryingGaussianMixtureModel()
 print run_1_time(sys, a, np.ones((2,1)), lambda x,y: np.random.rand(1,1))
 
 
