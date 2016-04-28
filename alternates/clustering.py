@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn import mixture, decomposition
 from sklearn import hmm
+import coreset
 
 """
 The approach from Calinon et al.
@@ -143,5 +144,76 @@ class HMMGaussianMixtureModel:
 
 		transitions.append(i)
 		return transitions
+
+"""
+Coresets
+"""
+class CoresetSegmentation:
+	def __init__(self, verbose=True):
+		self.verbose = verbose
+		self.segmentation = []
+		self.model = []
+		
+		#internal variables not for outside reference
+		self._demonstrations = []
+		self._demonstration_sizes = []
+
+	def addDemonstration(self,demonstration):
+		demo_size = np.shape(demonstration)
+		
+		if self.verbose:
+			print "[Alternates] Adding a Demonstration of Size=", demo_size
+
+		self._demonstration_sizes.append(demo_size)
+
+		time_augmented = np.zeros((demo_size[0],demo_size[1]+1))
+		time_augmented[:,0:demo_size[1]] = demonstration
+		time_augmented[:,demo_size[1]] = np.arange(0,demo_size[0],1)
+
+		self._demonstrations.append(time_augmented)
+
+	#this fits using the BIC, unless hard param is specified
+	def fit(self, n_components):
+
+		if self.verbose:
+			print "[Alternates] Clearing old model and segmentation"
+		
+		self.segmentation = []
+		self.model = []
+
+
+		new_segments = []
+		new_model = []
+
+		total_size = np.sum([ds[0] for ds in self._demonstration_sizes])
+		data_matrix = np.zeros((total_size,self._demonstration_sizes[0][1]+1))
+		i = 0
+		for d in self._demonstrations:
+			N = np.shape(d)
+			data_matrix[i:i+N[0],:] = d
+			i = i + N[0]
+
+		new_model = coreset.get_coreset(data_matrix, n_components,n_components)[0]
+
+		self.segmentation = self.taskToTrajectory(new_model)
+		self.model = new_model
+
+	def taskToTrajectory(self, new_model):
+		result = []
+		for d in self._demonstrations:
+			Nm = np.shape(new_model)
+			s = []
+			for i in range(0,Nm[0]):
+				l = []
+				N = np.shape(d)
+				for j in range(0,N[0]):
+					l.append((np.linalg.norm(d[j,:]-new_model[i,:]),j))
+				l.sort()
+				s.append(l[0][1])
+			s.append(0)
+			s.append(N[0])
+			result.append(s)
+		return result
+
 
 

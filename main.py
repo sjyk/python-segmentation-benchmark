@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 import copy, os
 from generate.TrajectoryDataGenerator import *
 from tsc.tsc import TransitionStateClustering
-from alternates.clustering import TimeVaryingGaussianMixtureModel, HMMGaussianMixtureModel
+from alternates.clustering import TimeVaryingGaussianMixtureModel, HMMGaussianMixtureModel, CoresetSegmentation
 
 
 #creates a system whose regimes are uniformly sampled from the stochastic params
@@ -50,10 +50,19 @@ for i in range(0,20):
 	t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 	a.addDemonstration(np.squeeze(t))
 
-a.fit(n_components = 3)
+a.fit(n_components = 4)
 print a.segmentation
 """
 
+a = CoresetSegmentation()
+for i in range(0,20):
+	t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+	a.addDemonstration(np.squeeze(t))
+a.fit(n_components = 2)
+print a.segmentation
+
+#from alternates.coreset import *
+#print coreset.get_coreset(np.squeeze(t),3,3)
 
 
 """
