@@ -17,17 +17,17 @@ sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.1], resonance=
 #w = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 #x = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 
-"""
+
 a = TransitionStateClustering(window_size=2)
 #t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 #plotData(t)
 for i in range(0,20):
-	t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+	t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=1, dp=0)
 	a.addDemonstration(np.squeeze(t))
 
-a.fit(normalize=False, pruning=0.8)
+a.fit(normalize=False, pruning=0.8,delta=1.0)
 print a.segmentation
-"""
+
 
 """
 a = TimeVaryingGaussianMixtureModel()
@@ -54,12 +54,14 @@ a.fit(n_components = 4)
 print a.segmentation
 """
 
+"""
 a = CoresetSegmentation()
 for i in range(0,20):
 	t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 	a.addDemonstration(np.squeeze(t))
 a.fit(n_components = 2)
 print a.segmentation
+"""
 
 #from alternates.coreset import *
 #print coreset.get_coreset(np.squeeze(t),3,3)

@@ -21,6 +21,7 @@ import numpy as np
 from sklearn import mixture, decomposition
 from dpcluster import *
 import matplotlib.pyplot as plt
+import dtw
 
 #debug
 # import IPython
@@ -87,7 +88,8 @@ class TransitionStateClustering:
 	def fit(self, 
 			pruning=0.9,
 			normalize=False,
-			normalizeKern="rbf"):
+			normalizeKern="rbf",
+			delta=-1):
 
 		#first validate
 		totalSize = self.checkSizes()
@@ -110,6 +112,8 @@ class TransitionStateClustering:
 		self.pruneClusters()
 		self.clusterInTime()
 		self.taskToTrajectory()
+
+		self.compaction(delta)
 
 	"""
 	This prunes transitions to a specified threshold
@@ -344,6 +348,33 @@ class TransitionStateClustering:
 
 		if self.verbose:
 			print "[TSC] Learned The Following Model: ", self.model
+
+
+	#does the compaction
+	def compaction(self,delta=-1):
+		for i in range(0, len(self._demonstrations)):
+			segs = self.segmentation[i]
+			segs.sort()
+			d = self._demonstrations[i]
+
+			prev = None
+			removal_vals = []
+
+			for j in range(0,len(segs)-1):
+				cur = d[segs[j]:segs[j+1],:]
+
+				if prev != None:
+					dist, cost, acc, path = dtw.dtw(cur, prev, dist=lambda x, y: np.linalg.norm(x - y, ord=2))
+					cmetric = dist/len(path)
+					if cmetric < delta:
+						removal_vals.append(segs[j+1]) 
+
+						if self.verbose:
+							print "[TSC] Compacting ", segs[j], segs[j+1]
+
+				prev = cur
+
+			self.segmentation[i] = [s for s in self.segmentation[i] if s not in removal_vals]
 			
 
 
