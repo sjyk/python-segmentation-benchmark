@@ -130,7 +130,7 @@ def seqToGroundTruth(seq, nsteps=50):
 
 		prev = i
 
-	print gt
+	return gt
 
 ###Plot sample
 def plotData(traj):
