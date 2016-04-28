@@ -4,10 +4,11 @@ from matplotlib import pyplot as plt
 import copy, os
 from generate.TrajectoryDataGenerator import *
 from tsc.tsc import TransitionStateClustering
+from alternates.clustering import TimeVaryingGaussianMixtureModel, HMMGaussianMixtureModel
 
 
 #creates a system whose regimes are uniformly sampled from the stochastic params
-sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.1], resonance=[0.0,0], drift=[0,0.0])
+sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.1], resonance=[0.0,0.0], drift=[0,0.0])
 
 #lm is the mean number of loops, dp is the probability of "missing"
 #t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
@@ -16,13 +17,44 @@ sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.1], resonance=
 #w = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 #x = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 
+"""
 a = TransitionStateClustering(window_size=2)
+#t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+#plotData(t)
 for i in range(0,20):
 	t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 	a.addDemonstration(np.squeeze(t))
 
 a.fit(normalize=False, pruning=0.8)
 print a.segmentation
+"""
+
+"""
+a = TimeVaryingGaussianMixtureModel()
+#t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+#plotData(t)
+for i in range(0,20):
+	t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+	a.addDemonstration(np.squeeze(t))
+
+a.fit(hard_param = 3)
+print a.segmentation
+"""
+
+
+"""
+a = HMMGaussianMixtureModel()
+#t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+#plotData(t)
+for i in range(0,20):
+	t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+	a.addDemonstration(np.squeeze(t))
+
+a.fit(n_components = 3)
+print a.segmentation
+"""
+
+
 
 """
 SAVE_FIGURES = False

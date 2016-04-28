@@ -147,6 +147,8 @@ class TransitionStateClustering:
 				else:
 					timeDict[key] = [t[2]]
 			
+			print timeDict
+
 			tseg = [np.median(timeDict[k]) for k in timeDict]
 			tseg.append(0)
 			tseg.append(self._demonstration_sizes[i][0]-self.window_size)
@@ -224,9 +226,23 @@ class TransitionStateClustering:
 
 
 	"""
+	Runs multiple runs of DPGMM takes the best clustering
+	"""
+	def DPGMM(self,data, dimensionality, p=0.9, k=1):
+		runlist = []
+		for i in range(0,k):
+			runlist.append(self.DPGMM_Helper(data,dimensionality,p))
+		runlist.sort()
+
+		print runlist
+
+		#return best
+		return runlist[-1][1]
+
+	"""
 	Uses Teodor's code to do DP GMM clustering
 	"""
-	def DPGMM(self,data, dimensionality, p=0.9):
+	def DPGMM_Helper(self,data, dimensionality, p=0.9):
 		vdp = VDP(GaussianNIW(dimensionality))
 		vdp.batch_learn(vdp.distr.sufficient_stats(data))		
 		likelihoods = vdp.pseudo_resp(np.ascontiguousarray(data))[0]
@@ -241,7 +257,7 @@ class TransitionStateClustering:
 			if running_total/total > p:
 				break
 
-		return [np.argmax(l[0:real_clusters]) for l in likelihoods]
+		return (-np.sum(vdp.al), [np.argmax(l[0:real_clusters]) for l in likelihoods])
 
 	"""
 	This function applies the state clustering
