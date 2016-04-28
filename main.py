@@ -18,14 +18,14 @@ sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.1], resonance=
 #x = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 
 
-a = TransitionStateClustering(window_size=2)
+a = TransitionStateClustering(window_size=2, normalize=False, pruning=0.8,delta=0.5)
 #t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 #plotData(t)
 for i in range(0,20):
 	t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 	a.addDemonstration(np.squeeze(t[0]))
 
-a.fit(normalize=False, pruning=0.8,delta=0.5)
+a.fit()
 print a.segmentation
 
 

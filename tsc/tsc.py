@@ -32,12 +32,23 @@ class TransitionStateClustering:
 	A TransitionStateClustering model is constructed with
 	a window size and initializes a bunch of internal state
 	"""
-	def __init__(self, window_size=2, verbose=True):
+	def __init__(self, 
+				 window_size=2, 
+				 pruning=0.9,
+				 normalize=False,
+				 normalizeKern="rbf",
+				 delta=-1,
+				 verbose=True):
+
 		self.window_size = window_size
 		self.verbose = verbose
 		self.model = []
 		self.task_segmentation = []
 		self.segmentation = []
+		self.pruning = pruning
+		self.delta = delta
+		self.normalize = normalize
+		self.normalizeKern = normalizeKern
 		
 		#internal variables not for external reference
 		self._demonstrations = []
@@ -85,11 +96,7 @@ class TransitionStateClustering:
 	it takes a pruning threshold and some DP-GMM hyperparameters
 	which are set to reasonable defaults
 	"""
-	def fit(self, 
-			pruning=0.9,
-			normalize=False,
-			normalizeKern="rbf",
-			delta=-1):
+	def fit(self):
 
 		#first validate
 		totalSize = self.checkSizes()
@@ -104,16 +111,15 @@ class TransitionStateClustering:
 		self.model = []
 		self.task_segmentation = []
 		self.segmentation = []
-		self.pruning = pruning
 
 		#helper routines
-		self.identifyTransitions(totalSize,normalize,normalizeKern)
+		self.identifyTransitions(totalSize,self.normalize,self.normalizeKern)
 		self.clusterInState()
 		self.pruneClusters()
 		self.clusterInTime()
 		self.taskToTrajectory()
 
-		self.compaction(delta)
+		self.compaction(self.delta)
 
 	"""
 	This prunes transitions to a specified threshold

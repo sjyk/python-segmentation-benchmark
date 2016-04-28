@@ -13,10 +13,12 @@ Same input and output behavior as TSC
 """
 class TimeVaryingGaussianMixtureModel:
 
-	def __init__(self, verbose=True):
+	def __init__(self, max_segments=20, hard_param=-1, verbose=True):
 		self.verbose = verbose
 		self.segmentation = []
 		self.model = []
+		self.max_segments = max_segments
+		self.hard_param = hard_param
 		
 		#internal variables not for outside reference
 		self._demonstrations = []
@@ -37,7 +39,7 @@ class TimeVaryingGaussianMixtureModel:
 		self._demonstrations.append(time_augmented)
 
 	#this fits using the BIC, unless hard param is specified
-	def fit(self, max_segments=20, hard_param=-1):
+	def fit(self):
 
 		if self.verbose:
 			print "[Alternates] Clearing old model and segmentation"
@@ -52,13 +54,13 @@ class TimeVaryingGaussianMixtureModel:
 		for d in self._demonstrations:
 			gmm_list = []
 
-			if hard_param == -1:
-				for k in range(1,max_segments):
+			if self.hard_param == -1:
+				for k in range(1,self.max_segments):
 					g = mixture.GMM(n_components=k)
 					g.fit(d) 
 					gmm_list.append((g.bic(d),g)) #lower bic better
 			else:
-				g = mixture.GMM(n_components=hard_param)
+				g = mixture.GMM(n_components=self.hard_param)
 				g.fit(d) 
 				gmm_list.append((g.bic(d),g))
 
@@ -89,10 +91,11 @@ The approach uses a HMM with Gaussian Emissions
 """
 class HMMGaussianMixtureModel:
 
-	def __init__(self, verbose=True):
+	def __init__(self, n_components, verbose=True):
 		self.verbose = verbose
 		self.segmentation = []
 		self.model = []
+		self.n_components = n_components
 		
 		#internal variables not for outside reference
 		self._demonstrations = []
@@ -109,7 +112,7 @@ class HMMGaussianMixtureModel:
 		self._demonstrations.append(demonstration)
 
 	#this fits using the BIC, unless hard param is specified
-	def fit(self, n_components):
+	def fit(self):
 
 		if self.verbose:
 			print "[Alternates] Clearing old model and segmentation"
@@ -121,7 +124,7 @@ class HMMGaussianMixtureModel:
 		new_segments = []
 		new_model = []
 
-		g = hmm.GaussianHMM(n_components=n_components)
+		g = hmm.GaussianHMM(n_components=self.n_components)
 
 		g.fit(self._demonstrations) 
 			
@@ -149,10 +152,11 @@ class HMMGaussianMixtureModel:
 Coresets
 """
 class CoresetSegmentation:
-	def __init__(self, verbose=True):
+	def __init__(self, n_components, verbose=True):
 		self.verbose = verbose
 		self.segmentation = []
 		self.model = []
+		self.n_components = n_components
 		
 		#internal variables not for outside reference
 		self._demonstrations = []
@@ -173,7 +177,7 @@ class CoresetSegmentation:
 		self._demonstrations.append(time_augmented)
 
 	#this fits using the BIC, unless hard param is specified
-	def fit(self, n_components):
+	def fit(self):
 
 		if self.verbose:
 			print "[Alternates] Clearing old model and segmentation"
@@ -193,7 +197,7 @@ class CoresetSegmentation:
 			data_matrix[i:i+N[0],:] = d
 			i = i + N[0]
 
-		new_model = coreset.get_coreset(data_matrix, n_components,n_components)[0]
+		new_model = coreset.get_coreset(data_matrix, self.n_components,self.n_components)[0]
 
 		self.segmentation = self.taskToTrajectory(new_model)
 		self.model = new_model
