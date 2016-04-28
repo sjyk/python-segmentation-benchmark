@@ -5,6 +5,11 @@ import scipy.cluster
 import scipy.spatial
 import time
 
+"""
+This is contrib code from
+https://github.com/yoojioh/gamelanpy/tree/master/gamelanpy
+"""
+
 
 def get_coreset(data, num_clusters, coreset_size, delta=0.1):
     '''
