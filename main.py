@@ -22,10 +22,10 @@ a = TransitionStateClustering(window_size=2)
 #t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 #plotData(t)
 for i in range(0,20):
-	t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=1, dp=0)
-	a.addDemonstration(np.squeeze(t))
+	t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
+	a.addDemonstration(np.squeeze(t[0]))
 
-a.fit(normalize=False, pruning=0.8,delta=1.0)
+a.fit(normalize=False, pruning=0.8,delta=0.5)
 print a.segmentation
 
 

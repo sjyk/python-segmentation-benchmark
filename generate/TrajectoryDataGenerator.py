@@ -114,7 +114,23 @@ def sampleDemonstrationFromSystem(sys,start,lm=0, dp=0):
 
 		prev = j
 
-	return traj
+	return (traj, seqToGroundTruth(seq))
+
+"""
+The ground truth time sequence
+"""
+def seqToGroundTruth(seq, nsteps=50):
+	gt = [0]
+	prev = -1
+	for i in seq:
+		if prev == i:
+			gt.append(gt[-1]+2*nsteps)
+		else:
+			gt.append(gt[-1]+nsteps)
+
+		prev = i
+
+	print gt
 
 ###Plot sample
 def plotData(traj):
