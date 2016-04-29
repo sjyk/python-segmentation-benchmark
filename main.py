@@ -6,9 +6,10 @@ from generate.TrajectoryDataGenerator import *
 from tsc.tsc import TransitionStateClustering
 from alternates.clustering import TimeVaryingGaussianMixtureModel, HMMGaussianMixtureModel, CoresetSegmentation
 from evaluation.Evaluator import *
+from evaluation.Metrics import *
 
 #creates a system whose regimes are uniformly sampled from the stochastic params
-sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.05], resonance=[0.0,0.0], drift=[0,0.0])
+sys = createNewDemonstrationSystem(k=5,dims=2, observation=[0.0,0.05], resonance=[0.0,0.0], drift=[0,0.0])
 
 #lm is the mean number of loops, dp is the probability of "missing"
 #t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
@@ -18,9 +19,9 @@ sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.05], resonance
 #x = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 
 
-#a = TransitionStateClustering(window_size=2, normalize=False, pruning=0.8,delta=0.5)
-a = TimeVaryingGaussianMixtureModel()
-print run_1_time(sys, a, np.ones((2,1)), lambda x,y: np.random.rand(1,1))
+a = TransitionStateClustering(window_size=2, normalize=False, pruning=0.0,delta=0.5)
+#a = TimeVaryingGaussianMixtureModel(hard_param=3)
+print run_1_time(sys, a, np.ones((2,1)), nearest_neighbor_match)
 
 
 """

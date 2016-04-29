@@ -238,7 +238,7 @@ class TransitionStateClustering:
 	"""
 	Runs multiple runs of DPGMM takes the best clustering
 	"""
-	def DPGMM(self,data, dimensionality, p=0.9, k=1):
+	def DPGMM(self,data, dimensionality, p=0.95, k=1):
 		runlist = []
 		for i in range(0,k):
 			runlist.append(self.DPGMM_Helper(data,dimensionality,p))
@@ -252,7 +252,7 @@ class TransitionStateClustering:
 	"""
 	Uses Teodor's code to do DP GMM clustering
 	"""
-	def DPGMM_Helper(self,data, dimensionality, p=0.9):
+	def DPGMM_Helper(self,data, dimensionality, p=0.95):
 		vdp = VDP(GaussianNIW(dimensionality))
 		vdp.batch_learn(vdp.distr.sufficient_stats(data))		
 		likelihoods = vdp.pseudo_resp(np.ascontiguousarray(data))[0]
@@ -315,12 +315,14 @@ class TransitionStateClustering:
 		for i in range(0,self._distinct_state_clusters):
 			tsI = [s for s in self._transition_states_scluster if s[2]==i]
 			ts_data_array = np.zeros((len(tsI),p))
-			t_data_array = np.zeros((len(tsI),1))
+			t_data_array = np.zeros((len(tsI),2))
 			
 			for j in range(0, len(tsI)):
 				ts = tsI[j]
 				ts_data_array[j,:] = self._demonstrations[ts[0]][ts[1],:]
-				t_data_array[j,:] = ts[1] + np.random.randn(1,1) #do this to avoid conditioning problems
+
+				t_data_array[j,0] = ts[1] + np.random.randn(1,1) #do this to avoid conditioning problems
+				t_data_array[j,1] = ts[1] + np.random.randn(1,1) #do this to avoid conditioning problems
 
 			if len(tsI) == 0:
 				continue
@@ -329,8 +331,10 @@ class TransitionStateClustering:
 			mm  = mixture.GMM(n_components=1)
 			mm.fit(ts_data_array)
 
+
 			#subcluster in time
-			indices = self.DPGMM(t_data_array,1,0.75)
+			indices = self.DPGMM(t_data_array,2,0.9)
+			print t_data_array, indices
 			indicesDict = list(set(indices))
 
 			#finish off by storing two values the task segmentation	
@@ -369,7 +373,7 @@ class TransitionStateClustering:
 			for j in range(0,len(segs)-1):
 				cur = d[segs[j]:segs[j+1],:]
 
-				if prev != None:
+				if prev != None and len(cur) > 0 and len(prev) > 0:
 					dist, cost, acc, path = dtw.dtw(cur, prev, dist=lambda x, y: np.linalg.norm(x - y, ord=2))
 					cmetric = dist/len(path)
 					if cmetric < delta:
