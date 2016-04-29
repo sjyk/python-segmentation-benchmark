@@ -46,10 +46,10 @@ def run_k_system(system_list,
 					 lm=0, 
 					 dp=0):
 
-	result = np.zeros((len(system_list),len(algorithm_list),2))
+	result = np.zeros((len(system_list),len(algorithm_list)))
 	for i,sys in enumerate(system_list):
 		for j,a in enumerate(algorithm_list):
-			result[i,j,:] = run_1_time(sys,a,initalcond,metric,k,lm,dp)
+			result[i,j] = run_1_time(sys,a,initalcond,metric,k,lm,dp)[0]
 
 	return result
 
@@ -77,4 +77,33 @@ def run_comparison_experiment(params,
 						k=20,
 					 	lm=0, 
 					 	dp=0)
-	
+
+#can only sweep noise right now
+def run_sweep_experiment(base_params,
+						 sweep_param,
+						 sweep_param_list,
+						 algorithm_list,
+						 initalcond,
+					 	 metric,
+					 	 N=5, 
+					 	 k=20,
+					 	 lm=0, 
+					 	 dp=0):
+	X = []
+	Y = []
+
+	for s in sweep_param_list:
+		X.append(s)
+		params = copy.deepcopy(base_params)
+		params[sweep_param] = [params[sweep_param][0], s]
+		result = run_comparison_experiment(params,
+										  algorithm_list,
+										  initalcond,
+					 	 				  metric,
+					 	 				  N, k,lm, dp)
+		print np.mean(result,axis=0)
+		Y.append(np.mean(result,axis=0))
+
+	return (X,Y)
+
+def plot()

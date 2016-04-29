@@ -10,7 +10,7 @@ from evaluation.Metrics import *
 
 #creates a system whose regimes are uniformly sampled from the stochastic params
 #sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.05], resonance=[0.0,0.0], drift=[0,0.0])
-sys_params = {'k':3,'dims':2, 'observation':[0.0,0.05], 'resonance':[0.0,0.0], 'drift':[0,0.0]}
+sys_params = {'k':5,'dims':2, 'observation':[0.0,0.1], 'resonance':[0.0,0.0], 'drift':[0,0.0]}
 #lm is the mean number of loops, dp is the probability of "missing"
 #t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 #u = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
@@ -19,11 +19,12 @@ sys_params = {'k':3,'dims':2, 'observation':[0.0,0.05], 'resonance':[0.0,0.0], '
 #x = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 
 
-a = TransitionStateClustering(window_size=2, normalize=False, pruning=0.75,delta=-1)
+a = TransitionStateClustering(window_size=2, normalize=False, pruning=0.0,delta=-1)
 b = TimeVaryingGaussianMixtureModel(hard_param=3)
 c = HMMGaussianMixtureModel(n_components=3)
 d = CoresetSegmentation(n_components=4)
-print run_comparison_experiment(sys_params, [a,b,c,d], np.ones((2,1)), jaccard)
+print run_sweep_experiment(sys_params, 'resonance', [0.1, 0.5, 1.0, 1.5], [a,b,c,d], np.ones((2,1)), jaccard)
+
 
 
 """
