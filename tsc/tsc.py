@@ -334,7 +334,7 @@ class TransitionStateClustering:
 
 			#subcluster in time
 			indices = self.DPGMM(t_data_array,2,0.9)
-			print t_data_array, indices
+			#print t_data_array, indices
 			indicesDict = list(set(indices))
 
 			#finish off by storing two values the task segmentation	
