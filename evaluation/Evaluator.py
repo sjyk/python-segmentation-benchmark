@@ -106,4 +106,41 @@ def run_sweep_experiment(base_params,
 
 	return (X,Y)
 
-def plot()
+#plots the data structure that comes out of the parameter
+#sweep
+def plotY1Y2(points_tuple,
+             title,
+             xaxis,
+             yaxis,
+             legend=[],
+             loc = 'upper right',
+             filename="output.png",
+             ylim=0,
+             xlim=0):
+
+	import matplotlib.pyplot as plt
+	from matplotlib import font_manager, rcParams
+	rcParams.update({'figure.autolayout': True})
+	rcParams.update({'font.size': 18})
+	fprop = font_manager.FontProperties(fname='/Library/Fonts/Microsoft/Gill Sans MT.ttf') 
+
+	plt.figure() 
+	colors = ['#00ff99','#0099ff','#ffcc00','#ff5050','#9900cc','#5050ff','#99cccc','#0de4f6']
+	shape = 's-'
+
+	X = points_tuple[0]
+	Y = points_tuple[1]
+	num_algos = len(Y[0])
+
+	for i in range(0, num_algos):
+		ya = [j[i] for j in Y]
+		plt.plot(X, ya, shape, linewidth=2.5,markersize=7,color=colors[i])
+
+	plt.legend(legend,loc=loc)
+	plt.title(title)
+	plt.xlabel(xaxis,fontproperties=fprop)
+	plt.ylabel(yaxis,fontproperties=fprop)
+	plt.ylim(ymin=ylim) 
+	plt.xlim(xmin=xlim, xmax=X[len(X)-1])
+	plt.grid(True)
+	plt.savefig(filename,bbox_inches='tight')

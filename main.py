@@ -10,7 +10,7 @@ from evaluation.Metrics import *
 
 #creates a system whose regimes are uniformly sampled from the stochastic params
 #sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.05], resonance=[0.0,0.0], drift=[0,0.0])
-sys_params = {'k':5,'dims':2, 'observation':[0.0,0.1], 'resonance':[0.0,0.0], 'drift':[0,0.0]}
+sys_params = {'k':3,'dims':2, 'observation':[0.0,0.1], 'resonance':[0.0,0.0], 'drift':[0,0.0]}
 #lm is the mean number of loops, dp is the probability of "missing"
 #t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 #u = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
@@ -23,8 +23,16 @@ a = TransitionStateClustering(window_size=2, normalize=False, pruning=0.0,delta=
 b = TimeVaryingGaussianMixtureModel(hard_param=3)
 c = HMMGaussianMixtureModel(n_components=3)
 d = CoresetSegmentation(n_components=4)
-print run_sweep_experiment(sys_params, 'resonance', [0.1, 0.5, 1.0, 1.5], [a,b,c,d], np.ones((2,1)), jaccard)
 
+plotY1Y2(run_sweep_experiment(sys_params, 'resonance', [0.0, 0.1, 0.2,0.3,0.4, 0.5], [a,b,c,d], np.ones((2,1)), jaccard, N=2),
+             "Resonance vs. Jaccard",
+             "Resonance Noise",
+             "Jaccard",
+             legend=["TSC", "GMM", "GMM+HMM", "Coreset"],
+             loc = 'upper right',
+             filename="output.png",
+             ylim=0,
+             xlim=0)
 
 
 """
