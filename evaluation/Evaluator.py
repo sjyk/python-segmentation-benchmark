@@ -36,5 +36,45 @@ def run_1_time(system,
 
 	return (np.mean(result), np.var(result))
 
+#on a list of systems it applies
+#a list of algorithms
+def run_k_system(system_list, 
+					 algorithm_list,
+					 initalcond,
+					 metric, 
+					 k=20,
+					 lm=0, 
+					 dp=0):
 
+	result = np.zeros((len(system_list),len(algorithm_list),2))
+	for i,sys in enumerate(system_list):
+		for j,a in enumerate(algorithm_list):
+			result[i,j,:] = run_1_time(sys,a,initalcond,metric,k,lm,dp)
+
+	return result
+
+#runs N trials of the same system specs
+def run_comparison_experiment(params,
+							  algorithm_list,
+					 		  initalcond,
+					 		  metric,
+					 		  N=5, 
+					 		  k=20,
+					 		  lm=0, 
+					 		  dp=0):
+	system_list = []
+	for i in range(0, N):
+		system_list.append(createNewDemonstrationSystem(k=params['k'],
+									   dims=params['dims'], 
+									   observation=params['observation'], 
+									   resonance=params['resonance'], 
+									   drift=params['drift']))
+
+	return run_k_system(system_list, 
+						algorithm_list, 
+						initalcond, 
+						metric, 
+						k=20,
+					 	lm=0, 
+					 	dp=0)
 	

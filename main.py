@@ -9,8 +9,8 @@ from evaluation.Evaluator import *
 from evaluation.Metrics import *
 
 #creates a system whose regimes are uniformly sampled from the stochastic params
-sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.05], resonance=[0.0,0.0], drift=[0,0.0])
-
+#sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.05], resonance=[0.0,0.0], drift=[0,0.0])
+sys_params = {'k':3,'dims':2, 'observation':[0.0,0.05], 'resonance':[0.0,0.0], 'drift':[0,0.0]}
 #lm is the mean number of loops, dp is the probability of "missing"
 #t = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 #u = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
@@ -19,9 +19,11 @@ sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.0,0.05], resonance
 #x = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 
 
-a = TransitionStateClustering(window_size=2, normalize=False, pruning=0.9,delta=-1)
-#a = TimeVaryingGaussianMixtureModel(hard_param=3)
-print run_1_time(sys, a, np.ones((2,1)), jaccard)
+a = TransitionStateClustering(window_size=2, normalize=False, pruning=0.75,delta=-1)
+b = TimeVaryingGaussianMixtureModel(hard_param=3)
+c = HMMGaussianMixtureModel(n_components=3)
+d = CoresetSegmentation(n_components=4)
+print run_comparison_experiment(sys_params, [a,b,c,d], np.ones((2,1)), jaccard)
 
 
 """
