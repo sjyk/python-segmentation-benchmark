@@ -126,7 +126,7 @@ def plotY1Y2(points_tuple,
 
 	plt.figure() 
 	colors = ['#00ff99','#0099ff','#ffcc00','#ff5050','#9900cc','#5050ff','#99cccc','#0de4f6']
-	shape = 's-'
+	shape = ['s-', 'o-', '^-', 'v-', 'x-']
 
 	X = points_tuple[0]
 	Y = points_tuple[1]
@@ -134,9 +134,9 @@ def plotY1Y2(points_tuple,
 
 	for i in range(0, num_algos):
 		ya = [j[i] for j in Y]
-		plt.plot(X, ya, shape, linewidth=2.5,markersize=7,color=colors[i])
+		plt.plot(X, ya, shape[i], linewidth=2.5,markersize=7,color=colors[i])
 
-	plt.legend(legend,loc=loc)
+	#plt.legend(legend,loc=loc)
 	plt.title(title)
 	plt.xlabel(xaxis,fontproperties=fprop)
 	plt.ylabel(yaxis,fontproperties=fprop)

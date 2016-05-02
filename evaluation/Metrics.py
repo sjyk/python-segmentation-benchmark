@@ -25,7 +25,10 @@ def nearest_neighbor_match(seq1, seq2):
 def jaccard(seq1, seq2, tol=5):
 	seq1 = seq1[1:len(seq1)-1]
 	seq2 = seq2[1:len(seq2)-1]
-	
+
+	if len(seq1) == 0 or len(seq2) == 0:
+		return 0
+
 	intersection_list = nearest_neighbor_match(seq1, seq2)
 	inter = len([t for t in intersection_list if abs(t[0]-t[1]) <= tol])
 	union = len(seq2) + len(seq1) - inter

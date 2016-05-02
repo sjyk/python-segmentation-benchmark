@@ -1,6 +1,8 @@
 import numpy as np
 from sklearn import mixture, decomposition
-from sklearn import hmm
+#from sklearn import hmm
+from hmmlearn.hmm import GaussianHMM
+from sklearn import preprocessing
 import coreset
 
 """
@@ -28,13 +30,16 @@ class TimeVaryingGaussianMixtureModel:
 		demo_size = np.shape(demonstration)
 		
 		if self.verbose:
-			print "[Alternates] Adding a Demonstration of Size=", demo_size
+			print "[Clustering] Adding a Demonstration of Size=", demo_size
 
 		self._demonstration_sizes.append(demo_size)
 
-		time_augmented = np.zeros((demo_size[0],demo_size[1]+1))
+		time_augmented = np.zeros((demo_size[0],2*demo_size[1]+1))
 		time_augmented[:,0:demo_size[1]] = demonstration
-		time_augmented[:,demo_size[1]] = np.arange(0,demo_size[0],1)
+		time_augmented[0:demo_size[0]-1,demo_size[1]:2*demo_size[1]] = demonstration[1:demo_size[0],:]
+		time_augmented[:,2*demo_size[1]] = np.arange(0,demo_size[0],1)
+
+		#time_augmented = preprocessing.normalize(time_augmented, axis=0)
 
 		self._demonstrations.append(time_augmented)
 
@@ -42,7 +47,7 @@ class TimeVaryingGaussianMixtureModel:
 	def fit(self):
 
 		if self.verbose:
-			print "[Alternates] Clearing old model and segmentation"
+			print "[Clustering] Clearing old model and segmentation"
 		
 		self.segmentation = []
 		self.model = []
@@ -105,17 +110,17 @@ class HMMGaussianMixtureModel:
 		demo_size = np.shape(demonstration)
 		
 		if self.verbose:
-			print "[Alternates] Adding a Demonstration of Size=", demo_size
+			print "[Clustering] Adding a Demonstration of Size=", demo_size
 
 		self._demonstration_sizes.append(demo_size)
-
+		demonstration = preprocessing.normalize(demonstration,axis=1)
 		self._demonstrations.append(demonstration)
 
 	#this fits using the BIC, unless hard param is specified
 	def fit(self):
 
 		if self.verbose:
-			print "[Alternates] Clearing old model and segmentation"
+			print "[Clustering] Clearing old model and segmentation"
 		
 		self.segmentation = []
 		self.model = []
@@ -124,12 +129,19 @@ class HMMGaussianMixtureModel:
 		new_segments = []
 		new_model = []
 
-		g = hmm.GaussianHMM(n_components=self.n_components)
+		g = GaussianHMM(n_components=self.n_components)
 
-		g.fit(self._demonstrations) 
+		all_demos = self._demonstrations[0]
+		lens = [np.shape(self._demonstrations[0])[0]]
+		for i in range(1, len(self._demonstrations)):
+			all_demos = np.concatenate([all_demos,self._demonstrations[i]])
+			lens.append(np.shape(self._demonstrations[i])[0])
+
+		g.fit(all_demos,lens) 
 			
 		for d in self._demonstrations:
 			new_segments.append(self.findTransitions(g.predict(d)))
+			#print g.predict(d)
 			new_model.append(g)
 
 		self.segmentation = new_segments
@@ -166,7 +178,7 @@ class CoresetSegmentation:
 		demo_size = np.shape(demonstration)
 		
 		if self.verbose:
-			print "[Alternates] Adding a Demonstration of Size=", demo_size
+			print "[Clustering] Adding a Demonstration of Size=", demo_size
 
 		self._demonstration_sizes.append(demo_size)
 
@@ -180,7 +192,7 @@ class CoresetSegmentation:
 	def fit(self):
 
 		if self.verbose:
-			print "[Alternates] Clearing old model and segmentation"
+			print "[Clustering] Clearing old model and segmentation"
 		
 		self.segmentation = []
 		self.model = []

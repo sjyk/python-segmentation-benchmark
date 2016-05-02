@@ -19,6 +19,7 @@ def createNewDemonstrationSystem(k=5,
 								 resonance=[0,0], 
 								 observation=[0,0]):
 
+	#np.random.seed(0)
 	targets = generateTargetStates(k, dims, bounds)
 	print targets
 	system =  generateSystemSpecs(k,drift,resonance,observation) 
