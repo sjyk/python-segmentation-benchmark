@@ -23,8 +23,10 @@ def nearest_neighbor_match(seq1, seq2):
 	return intersection_list
 
 def jaccard(seq1, seq2, tol=5):
-	seq1 = seq1[1:len(seq1)-1]
-	seq2 = seq2[1:len(seq2)-1]
+	#remove the edge effects
+	seq1 = [s for s in seq1 if abs(s) < 5 or abs(s-np.max(seq1)) < 5]
+	#seq1[1:len(seq1)-1]
+	seq2 = [s for s in seq2 if abs(s) < 5 or abs(s-np.max(seq2)) < 5]
 
 	if len(seq1) == 0 or len(seq2) == 0:
 		return 0

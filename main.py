@@ -11,17 +11,19 @@ from evaluation.Metrics import *
 
 #creates a system whose regimes are uniformly sampled from the stochastic params
 
+"""
 sys = createNewDemonstrationSystem(k=3,dims=2, observation=[0.1,0.1], resonance=[0.0,0.0], drift=[0.0,0.0])
 t = sampleDemonstrationFromSystem(sys,np.ones((2,1)),lm=0.0, dp=0.0)
 t2 = sampleDemonstrationFromSystem(sys,np.ones((2,1)),lm=0.0, dp=0.0)
 t3 = sampleDemonstrationFromSystem(sys,np.ones((2,1)),lm=0.0, dp=0.0)
 
-a = AutoregressiveMarkovModel()
+
 a.addDemonstration(t[0])
 a.addDemonstration(t2[0])
 a.addDemonstration(t3[0])
 a.fit()
 print a.segmentation
+"""
 
 
 
@@ -38,23 +40,24 @@ sys_params = {'k':3,'dims':2, 'observation':[0.0,0.1], 'resonance':[0.0,0.0], 'd
 
 
 
-"""
-a = TransitionStateClustering(window_size=2, normalize=False, pruning=0.0,delta=-1)
+
+a = TransitionStateClustering(window_size=2, normalize=False, pruning=0.3,delta=-1)
 b = TimeVaryingGaussianMixtureModel(hard_param=3)
 c = HMMGaussianMixtureModel(n_components=3)
 d = CoresetSegmentation(n_components=4)
 e = HiddenSemiMarkovModel()
+f = AutoregressiveMarkovModel()
 
-plotY1Y2(run_sweep_experiment(sys_params, 'observation', [0.1, 0.2, 0.3], [a,b,c,d,e], np.ones((2,1)), jaccard, N=2),
+plotY1Y2(run_sweep_experiment(sys_params, 'observation', [0.01, 0.1, 0.25, 0.5, 1], [a,b,c,d,e,f], np.ones((2,1)), jaccard, N=5, k=20),
              "Observation Noise vs. Jaccard",
              "Observation Noise",
              "Jaccard",
-             legend=["TSC", "GMM", "GMM+HMM", "Coreset", "HSMM"],
-             loc = 'upper right',
+             legend=["TSC", "GMM", "GMM+HMM", "Coreset", "HSMM", "ARHMM"],
+             loc = 'title',
              filename="output.png",
              ylim=0.0,
              xlim=0.1)
-"""
+
 
 
 

@@ -71,7 +71,7 @@ class HiddenSemiMarkovModel:
 		for d in self._demonstrations:
 			posteriormodel.add_data(np.squeeze(np.array(d)),trunc=60) # duration truncation speeds things up when it's possible
 
-		for idx in progprint_xrange(150):
+		for idx in progprint_xrange(50):
 			posteriormodel.resample_model()
 
 		new_segments = []
@@ -107,6 +107,7 @@ class AutoregressiveMarkovModel:
 		self.alpha = alpha
 		self.nu = nu
 		self.gamma = gamma
+		#self.cap=cap
 		self.init_state_concentration = init_state_concentration
 		
 		#internal variables not for outside reference
@@ -147,9 +148,11 @@ class AutoregressiveMarkovModel:
 
 
 		for d in self._demonstrations:
-			model.add_data(d)
+			model.add_data(d,trunc=60)
 
-		for itr in progprint_xrange(100):
+		#model.resample_model()
+
+		for itr in progprint_xrange(20):
 			model.resample_model()
 
 		new_segments = []
