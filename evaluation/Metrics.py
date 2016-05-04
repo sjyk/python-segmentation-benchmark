@@ -55,9 +55,15 @@ def segment_precision_recall (seg1,seg2):
     TP = float(max( int_end - int_start  , 0 ))
 
     # recall = true_positive/ condition_positive
-    recall = TP/len_ref
+    if len_ref >0:        
+        recall = TP/len_ref
+    else:
+        recall = 0
     # precision = true_positive / test_outcome_positive
-    precision =  TP/len_pred
+    if len_pred>0:
+        precision =  TP/len_pred
+    else:
+        precision =0
 
     return precision, recall
 
