@@ -205,13 +205,13 @@ def evaluate(seq1, seq2, type='jaccard', **options):
         else:
             return jaccard(seq1, seq2)
 
-    if type == 'frame_acc':
+    if method == 'frame_acc':
         if 'similarity_measure' in options.keys():
             return frame_acc(seq1, seq2, similarity_measure = options['similarity_measure'])
         else:
             return frame_acc(seq1, seq2)
 
-    if type == 'seg_acc':
+    if method == 'seg_acc':
 
         if 'thresh' in options.keys():
                 thresh = options['thresh']
