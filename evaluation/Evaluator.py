@@ -34,8 +34,8 @@ def run_1_time(system,
 	a.fit()
 	result = []
 	for j in range(0,k):
-		print gtlist[j],a.segmentation[j]
-		result.append(metric(gtlist[j],a.segmentation[j]))
+		a.segmentation[j].sort()
+		result.append(metric(a.segmentation[j], gtlist[j]))
 
 	print "Run Time",k, algorithm.__class__.__name__, datetime.datetime.now() - timestart
 

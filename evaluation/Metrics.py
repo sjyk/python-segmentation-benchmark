@@ -46,7 +46,7 @@ def segment_precision_recall (seg1,seg2):
         print "Incorrect input to segment_precision_recall"
         return
 
-    print seg1, seg2
+    #print seg1, seg2
 
     len_ref = seg2[1] - seg2[0] #first point in the sequence not included
     len_pred = seg1[1] - seg1[0]
@@ -149,11 +149,11 @@ def frame_acc (seq1, seq2, similarity_measure='recall'):
     len_pred = seq1[-1] - seq1[0]
 
     for k1 in range(len(seq1)-1):
-        for i in range (seq1[k1], seq1[k1+1]):
+        for i in range (int(round(seq1[k1])), int(round(seq1[k1+1]))):
             start = seq2[max_ind[k1]]
             end = seq2 [max_ind[k1] + 1]
             
-            print i, seq1[k1], max_ind[k1], start, end, acc_score
+            #print i, seq1[k1], max_ind[k1], start, end, acc_score
             if i >= start and i< end:
                 #correctly matched
                 acc_score = acc_score +1
