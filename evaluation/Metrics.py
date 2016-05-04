@@ -192,7 +192,7 @@ def seg_acc (seq1, seq2, thresh = 0.4, similarity_measure = "recall"):
     return sum(acc_score)/num_gt_segments
 
 
-def evaluate(seq1, seq2, type='jaccard', **options):
+def evaluate(seq1, seq2, method='jaccard', **options):
     """
     generic evaluation call
     seq1: predicted sequence -- algorithm output
