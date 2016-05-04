@@ -6,6 +6,7 @@ same task.
 import copy
 import numpy as np
 from generate.TrajectoryDataGenerator import *
+import datetime
 
 #system is a demonstration system
 #algorithm is 
@@ -20,6 +21,8 @@ def run_1_time(system,
 				lm=0, 
 				dp=0):
 
+	timestart = datetime.datetime.now()
+
 	a = copy.deepcopy(algorithm)
 		
 	gtlist = []
@@ -33,6 +36,8 @@ def run_1_time(system,
 	for j in range(0,k):
 		print gtlist[j],a.segmentation[j]
 		result.append(metric(gtlist[j],a.segmentation[j]))
+
+	print "Run Time",k, algorithm.__class__.__name__, datetime.datetime.now() - timestart
 
 	return (np.mean(result), np.var(result))
 
@@ -101,7 +106,7 @@ def run_sweep_experiment(base_params,
 										  initalcond,
 					 	 				  metric,
 					 	 				  N, k,lm, dp)
-		print np.mean(result,axis=0)
+		print "Result vector", np.mean(result,axis=0)
 		Y.append(np.mean(result,axis=0))
 
 	return (X,Y)

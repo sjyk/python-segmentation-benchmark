@@ -39,8 +39,8 @@ sys_params = {'k':3,'dims':2, 'observation':[0.0,0.1], 'resonance':[0.0,0.0], 'd
 #x = sampleDemonstrationFromSystem(sys,np.ones((2,1)), lm=0, dp=0)
 
 
-
 #0.3 o,  0.3, 3 r
+"""
 a = TransitionStateClustering(window_size=3, normalize=False, pruning=0.3,delta=-1)
 b = TimeVaryingGaussianMixtureModel(hard_param=3)
 c = HMMGaussianMixtureModel(n_components=3)
@@ -48,7 +48,24 @@ d = CoresetSegmentation(n_components=4)
 e = HiddenSemiMarkovModel()
 f = AutoregressiveMarkovModel()
 
-plotY1Y2(run_sweep_experiment(sys_params, 'resonance', [0.01, 0.25, 0.5, 1, 2], [a,b,c,d,e,f], np.ones((2,1)), jaccard, N=5, k=20),
+plotY1Y2(run_sweep_experiment(sys_params, 'resonance', [0.01, 0.25, 0.5, 1, 2], [a,b,c,d,e,f], np.ones((2,1)), jaccard, N=5, k=5),
+             "LF Noise vs. Jaccard",
+             "LF Noise",
+             "Jaccard",
+             legend=["TSC", "GMM", "GMM+HMM", "Coreset", "HSMM", "ARHMM"],
+             loc = 'title',
+             filename="output2.png",
+             ylim=0.0,
+             xlim=0.1)
+"""
+a = TransitionStateClustering(window_size=3, normalize=False, pruning=0.3,delta=-1)
+b = TimeVaryingGaussianMixtureModel(hard_param=3)
+c = HMMGaussianMixtureModel(n_components=3)
+d = CoresetSegmentation(n_components=4)
+e = HiddenSemiMarkovModel()
+f = AutoregressiveMarkovModel()
+
+plotY1Y2(run_sweep_experiment(sys_params, 'resonance', [0.01], [a,b,c,d,e,f], np.ones((2,1)), jaccard, N=5, k=10),
              "LF Noise vs. Jaccard",
              "LF Noise",
              "Jaccard",
@@ -58,6 +75,24 @@ plotY1Y2(run_sweep_experiment(sys_params, 'resonance', [0.01, 0.25, 0.5, 1, 2], 
              ylim=0.0,
              xlim=0.1)
 
+
+"""
+a = TransitionStateClustering(window_size=2, normalize=False, pruning=0.2,delta=-1)
+b = TransitionStateClustering(window_size=2, normalize=False, pruning=0.4,delta=-1)
+c = TransitionStateClustering(window_size=2, normalize=False, pruning=0.6,delta=-1)
+d = TransitionStateClustering(window_size=2, normalize=False, pruning=0.8,delta=-1)
+e = TransitionStateClustering(window_size=2, normalize=False, pruning=1.0,delta=-1)
+
+plotY1Y2(run_sweep_experiment(sys_params, 'observation', [0.1, 0.2, 0.5, 0.75, 1, 1.5], [a,b,c,d,e], np.ones((2,1)), jaccard, N=5, k=20),
+             "LF Noise vs. Jaccard",
+             "LF Noise",
+             "Jaccard",
+             legend=["TSC (p=0.2)", "TSC (p=0.4)", "TSC (p=0.6)", "TSC (p=0.8)", "TSC (p=1.0)"],
+             loc = 'title',
+             filename="output5.png",
+             ylim=0.0,
+             xlim=0.1)
+"""
 
 
 

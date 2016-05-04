@@ -152,7 +152,7 @@ class AutoregressiveMarkovModel:
 
 		#model.resample_model()
 
-		for itr in progprint_xrange(20):
+		for itr in progprint_xrange(50):
 			model.resample_model()
 
 		new_segments = []
