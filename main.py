@@ -65,7 +65,7 @@ d = CoresetSegmentation(n_components=4)
 e = HiddenSemiMarkovModel()
 f = AutoregressiveMarkovModel()
 
-plotY1Y2(run_sweep_experiment(sys_params, 'resonance', [0.01], [a,b,c,d,e,f], np.ones((2,1)), jaccard, N=5, k=10),
+plotY1Y2(run_sweep_experiment(sys_params, 'resonance', [0.01], [a,b,c,d,e,f], np.ones((2,1)), lambda x,y: evaluate(x,y,'frame_acc'), N=2, k=20),
              "LF Noise vs. Jaccard",
              "LF Noise",
              "Jaccard",

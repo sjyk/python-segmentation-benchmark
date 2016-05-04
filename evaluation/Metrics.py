@@ -46,6 +46,8 @@ def segment_precision_recall (seg1,seg2):
         print "Incorrect input to segment_precision_recall"
         return
 
+    print seg1, seg2
+
     len_ref = seg2[1] - seg2[0] #first point in the sequence not included
     len_pred = seg1[1] - seg1[0]
     int_start = max(seg1[0],seg2[0])
@@ -191,12 +193,12 @@ def seg_acc (seq1, seq2, thresh = 0.4, similarity_measure = "recall"):
 
 
 def evaluate(seq1, seq2, type='jaccard', **options):
-	"""
-	generic evaluation call
+    """
+    generic evaluation call
     seq1: predicted sequence -- algorithm output
-	seq2: reference -- ground truth	
-	method: which method to use. defaults to Jaccard (intersection over union)
-	"""
+     seq2: reference -- ground truth	
+    method: which method to use. defaults to Jaccard (intersection over union)
+    """
     if type == 'jaccard':
         if 'tol' in options.keys():
             return jaccard(seq1, seq2, tol=options['tol'])
@@ -213,7 +215,7 @@ def evaluate(seq1, seq2, type='jaccard', **options):
 
         if 'thresh' in options.keys():
                 thresh = options['thresh']
-            else:
+        else:
                 thresh = 0.4
 
         if 'similarity_measure' in options.keys():
