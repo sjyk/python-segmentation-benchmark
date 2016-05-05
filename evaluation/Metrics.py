@@ -143,6 +143,8 @@ def segment_correspondence (seq1,seq2, similarity_measure = "recall"):
 def frame_acc (seq1, seq2, similarity_measure='recall'):
     """
     Frame wise accuracy
+    seq1: predicted sequence -- algorithm output
+    seq2: reference -- ground truth    
     """
     max_ind, wt_mat = segment_correspondence (seq1,seq2, similarity_measure)
     acc_score = 0.0
@@ -173,23 +175,28 @@ def seg_acc (seq1, seq2, thresh = 0.4, similarity_measure = "recall"):
     """
     #get correspondence
     max_ind, wt_mat = segment_correspondence (seq1,seq2, similarity_measure)
-
+    
+    print max_ind
     num_gt_segments = len(seq2) - 1
     acc_score = np.zeros(num_gt_segments,)
 
     for k2 in range(num_gt_segments):
-        for k1 in range(len(seq1)-1):
-
+        # only the ones associated with this ground truth segment
+        associated_predictions = [i for i, k in enumerate(max_ind) if k == k2]
+        for k1 in range(len(associated_predictions)):
             s1 = [seq1[k1], seq1[k1+1]]
-            s2 = [seq2[k2], seq2[k2+1]]            
+            s2 = [seq2[k2], seq2[k2+1]]  
+            #s2 = [ seq2[max_ind[k1]], seq2[max_ind[k1]+1] ]
             score = inter_over_union (s1, s2)
             
+            print s1, s2, score
             #condition if the GT segment k2 is covered by any of predicted segments
-            if score >= thresh:
-                acc_score[k2] = 1.0
+            if score >= max(thresh, acc_score[k2]) :
+                acc_score[k2] = score
 
     #return ratio of GT segments covered
-    return sum(acc_score)/num_gt_segments
+    #return sum(acc_score)/num_gt_segments
+    return float(np.count_nonzero(acc_score))/num_gt_segments
 
 
 def evaluate(seq1, seq2, method='jaccard', **options):
