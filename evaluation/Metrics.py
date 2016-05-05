@@ -183,7 +183,7 @@ def seg_acc (seq1, seq2, thresh = 0.4, similarity_measure = "recall"):
     for k2 in range(num_gt_segments):
         # only the ones associated with this ground truth segment
         associated_predictions = [i for i, k in enumerate(max_ind) if k == k2]
-        for k1 in range(len(associated_predictions)):
+        for k1 in associated_predictions:
             s1 = [seq1[k1], seq1[k1+1]]
             s2 = [seq2[k2], seq2[k2+1]]  
             #s2 = [ seq2[max_ind[k1]], seq2[max_ind[k1]+1] ]
