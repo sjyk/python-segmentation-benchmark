@@ -141,7 +141,7 @@ def plotY1Y2(points_tuple,
 		ya = [j[i] for j in Y]
 		plt.plot(X, ya, shape[i], linewidth=2.5,markersize=7,color=colors[i])
 
-	plt.legend(legend,loc=loc)
+	#plt.legend(legend,loc=loc)
 	plt.title(title)
 	plt.xlabel(xaxis,fontproperties=fprop)
 	plt.ylabel(yaxis,fontproperties=fprop)

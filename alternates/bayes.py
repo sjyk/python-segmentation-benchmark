@@ -99,7 +99,7 @@ class HiddenSemiMarkovModel:
 Uses an off the shelf AutoregressiveMarkovModel
 """
 class AutoregressiveMarkovModel:
-	def __init__(self, lag=10, alpha=2.5, gamma=4, nu=2, init_state_concentration=10, verbose=True):
+	def __init__(self, lag=4, alpha=1.5, gamma=4, nu=2, init_state_concentration=10, verbose=True):
 		self.verbose = verbose
 		self.segmentation = []
 		self.model = []
@@ -157,7 +157,7 @@ class AutoregressiveMarkovModel:
 
 		new_segments = []
 		for i in range(0, len(self._demonstrations)):
-			print model.states_list[i].stateseq
+			#print model.states_list[i].stateseq
 			new_segments.append(self.findTransitions(model.states_list[i].stateseq))
 
 		self.segmentation = new_segments
